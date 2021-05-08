@@ -99,10 +99,12 @@ const Keyboard = () => {
   }, []);
 
   const focusTextArea = () => {
-    const textAreaEl: any = refToContentInput.current;
+    if (window.innerWidth > 992) {
+      const textAreaEl: any = refToContentInput.current;
 
-    if (textAreaEl instanceof HTMLTextAreaElement) {
-      textAreaEl.focus();
+      if (textAreaEl instanceof HTMLTextAreaElement) {
+        textAreaEl.focus();
+      }
     }
   };
 
