@@ -2,13 +2,48 @@ import { ChangeEventHandler, useState } from "react";
 import styled from "styled-components";
 import shuffle from "../common/shuffle";
 import Key from "./Key";
-import keys from "./keys";
+import {
+  alphabetKeys as aKeys,
+  numericKeys as nKeys,
+  specialKeys as sKeys,
+} from "./keys";
 
 const KeyboardContainer = styled.div`
   display: flex;
   flex-flow: column wrap;
-  max-width: 700px;
+  max-width: 800px;
   margin: auto;
+  padding: 20px;
+`;
+
+const TextAreaContainer = styled.div`
+  margin-top: 20px;
+  margin-bottom: 20px;
+`;
+
+const AlphaSpecialKeysContainer = styled.div`
+  display: flex;
+  margin-top: 20px;
+`;
+
+const FunctionalKeysContainer = styled.div`
+  margin-top: 20px;
+`;
+
+const FunctionalKey = styled(Key)`
+  background-color: ${(props) => (props.isActive ? "darkseagreen" : "white")};
+
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+
+const DeleteKey = styled(Key)`
+  background-color: #ff6961;
+
+  &:hover {
+    opacity: 0.8;
+  }
 `;
 
 const StyledTextArea = styled.textarea`
@@ -18,12 +53,21 @@ const StyledTextArea = styled.textarea`
 const Keyboard = () => {
   const [content, setContent] = useState("");
   const [capsLock, setCapsLock] = useState(false);
-  const [shift, setSshift] = useState(false);
-  const [virtualKeys, setVirtualKeys] = useState(keys);
+  const [shift, setShift] = useState(false);
+  const [alphabetKeys, setAlphabetKeys] = useState(aKeys);
+  const [numericKeys, setNumericKeys] = useState(nKeys);
+  const [specialKeys, setSpecialKeys] = useState(sKeys);
+  const [shouldShuffle, setShouldShuffle] = useState(true);
 
   const handleClick = (keyTitle: string) => {
     setContent(content + keyTitle);
-    setVirtualKeys(shuffle(virtualKeys));
+
+    if (shouldShuffle) {
+      setAlphabetKeys(shuffle(alphabetKeys));
+      setNumericKeys(shuffle(numericKeys));
+      setSpecialKeys(shuffle(specialKeys));
+    }
+
     turnShiftOff();
   };
 
@@ -41,15 +85,27 @@ const Keyboard = () => {
   };
 
   const turnShiftOn = () => {
-    setSshift(true);
+    setShift(true);
   };
 
   const turnShiftOff = () => {
-    setSshift(false);
+    setShift(false);
+  };
+
+  const turnShuffleOn = () => {
+    setShouldShuffle(true);
+  };
+
+  const turnShuffleOff = () => {
+    setShouldShuffle(false);
   };
 
   const handleShiftClick = () => {
-    turnShiftOn();
+    if (shift) {
+      turnShiftOff();
+    } else {
+      turnShiftOn();
+    }
   };
 
   const handleCapsLockClick = () => {
@@ -60,9 +116,17 @@ const Keyboard = () => {
     }
   };
 
-  const handleSpace = () => {
-    setContent(content + " ");
+  const handleShuffleClick = () => {
+    if (shouldShuffle) {
+      turnShuffleOff();
+    } else {
+      turnShuffleOn();
+    }
   };
+
+  // const handleSpace = () => {
+  //   setContent(content + " ");
+  // };
 
   const handleDeleteClick = () => {
     const contentCopy = content;
@@ -72,16 +136,18 @@ const Keyboard = () => {
 
   return (
     <KeyboardContainer>
-      <div>
+      <h1>Virtual Keyboard with auto shuffle</h1>
+
+      <TextAreaContainer>
         <StyledTextArea
           rows={10}
           onChange={handleContentChange}
           value={content}
         />
-      </div>
+      </TextAreaContainer>
 
       <div>
-        {virtualKeys.map((key) => (
+        {numericKeys.map((key) => (
           <Key
             key={key.title}
             title={key.title}
@@ -94,35 +160,76 @@ const Keyboard = () => {
         ))}
       </div>
 
-      <div>
-        <Key
-          title="Shift"
+      <AlphaSpecialKeysContainer>
+        <div>
+          {alphabetKeys.map((key) => (
+            <Key
+              key={key.title}
+              title={key.title}
+              shiftCharacter={key.shiftedKey}
+              capsLockCharacter={key.upperCaseKey}
+              handleClick={handleClick}
+              shift={shift}
+              capsLock={capsLock}
+            />
+          ))}
+        </div>
+
+        <div>
+          {specialKeys.map((key) => (
+            <Key
+              key={key.title}
+              title={key.title}
+              shiftCharacter={key.shiftedKey}
+              capsLockCharacter={key.upperCaseKey}
+              handleClick={handleClick}
+              shift={shift}
+              capsLock={capsLock}
+            />
+          ))}
+        </div>
+      </AlphaSpecialKeysContainer>
+
+      {/* Functional keys */}
+      <FunctionalKeysContainer>
+        <FunctionalKey
+          title={shouldShuffle ? "Shuffle On" : "Shuffle Off"}
+          isActive={shouldShuffle}
+          handleClick={handleShuffleClick}
+          shift={shift}
+          capsLock={capsLock}
+        />
+
+        <FunctionalKey
+          title={shift ? "Shift On" : "Shift off"}
+          isActive={shift}
           handleClick={handleShiftClick}
           shift={shift}
           capsLock={capsLock}
         />
 
-        <Key
-          title="Caps Lock"
+        <FunctionalKey
+          title={capsLock ? "Caps Lock On" : "Caps Lock Off"}
+          isActive={capsLock}
           handleClick={handleCapsLockClick}
           shift={shift}
           capsLock={capsLock}
         />
 
-        <Key
+        <DeleteKey
           title="Delete"
           handleClick={handleDeleteClick}
           shift={shift}
           capsLock={capsLock}
         />
 
-        <Key
-          title="Space"
-          handleClick={handleSpace}
-          shift={shift}
-          capsLock={capsLock}
-        />
-      </div>
+        {/*<Key*/}
+        {/*  title="Space"*/}
+        {/*  handleClick={handleSpace}*/}
+        {/*  shift={shift}*/}
+        {/*  capsLock={capsLock}*/}
+        {/*/>*/}
+      </FunctionalKeysContainer>
     </KeyboardContainer>
   );
 };

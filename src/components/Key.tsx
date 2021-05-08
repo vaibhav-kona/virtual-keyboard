@@ -6,11 +6,13 @@ interface KeyProps {
   shift: boolean;
   capsLock: boolean;
   shiftCharacter?: string;
-  capsLockCharacter?: string;
+  capsLockCharacter?: string | null;
+  className?: string;
+  isActive?: boolean;
 }
 
 const StyledButton = styled.button`
-  background-color: white;
+  background-color: lightblue;
   box-shadow: none;
   border: 1px solid grey;
   padding: 12px;
@@ -20,11 +22,14 @@ const StyledButton = styled.button`
   margin: 4px;
 
   &:hover {
-    border: 1px solid red;
+    border: 1px solid darkblue;
+    opacity: 0.5;
+    cursor: pointer;
   }
 `;
 
 const Key = ({
+  className,
   title,
   handleClick,
   shift,
@@ -34,14 +39,23 @@ const Key = ({
 }: KeyProps) => {
   let displayTitle = title;
 
-  if (capsLock) {
-    displayTitle = capsLockCharacter || title;
-  } else if (shift) {
+  // c - 0, s - 0 => default
+  // c - 1, s - 0 => alpha - to capital
+  // c - 0, s - 1 => all shifted characters
+  // c - 1, s - 1 => all shifted characters
+
+  if (shift) {
     displayTitle = shiftCharacter || title;
+  } else if (capsLock) {
+    displayTitle = capsLockCharacter || title;
   }
 
   return (
-    <StyledButton type="button" onClick={() => handleClick(displayTitle)}>
+    <StyledButton
+      className={className}
+      type="button"
+      onClick={() => handleClick(displayTitle)}
+    >
       {displayTitle}
     </StyledButton>
   );
