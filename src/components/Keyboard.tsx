@@ -1,6 +1,7 @@
 import { ChangeEventHandler, useState } from "react";
 import styled from "styled-components";
 import shuffle from "../common/shuffle";
+import ClearConfirmationModal from "./ClearConfirmationModal";
 import Key from "./Key";
 import {
   alphabetKeys as aKeys,
@@ -30,6 +31,7 @@ const FunctionalKeysContainer = styled.div`
   margin-top: 20px;
   display: flex;
   justify-content: center;
+  flex-flow: row wrap;
 `;
 
 const FunctionalKey = styled(Key)`
@@ -37,24 +39,41 @@ const FunctionalKey = styled(Key)`
   &:hover {
     opacity: 0.8;
   }
-`;
-
-const DeleteKey = styled(Key)`
-  background-color: #ff6961;
-  &:hover {
-    opacity: 0.8;
+  @media (max-width: 768px) {
+    flex: 0 0 30%;
   }
 `;
 
-// const ClearKey = styled(Key)`
-//   background-color: #ff6961;
-//   &:hover {
-//     opacity: 0.8;
-//   }
-// `;
+const DeleteKey = styled(Key)`
+  background-color: #e60023;
+  color: white;
+  &:hover {
+    opacity: 0.8;
+  }
+
+  @media (max-width: 768px) {
+    flex: 0 0 40%;
+  }
+`;
+
+const ClearKey = styled(Key)`
+  background-color: #e60023;
+  color: white;
+  &:hover {
+    opacity: 0.8;
+  }
+
+  @media (max-width: 768px) {
+    flex: 0 0 40%;
+  }
+`;
 
 const SpaceKey = styled(Key)`
   flex: 0 0 25%;
+  @media (max-width: 768px) {
+    order: -1;
+    flex: 0 0 100%;
+  }
 `;
 
 const StyledTextArea = styled.textarea`
@@ -69,9 +88,9 @@ const Keyboard = () => {
   const [numericKeys, setNumericKeys] = useState(nKeys);
   const [specialKeys, setSpecialKeys] = useState(sKeys);
   const [shouldShuffle, setShouldShuffle] = useState(true);
-  // const [showClearConfirmationModal, setShowClearConfirmationModal] = useState(
-  //   false
-  // );
+  const [showClearConfirmationModal, setShowClearConfirmationModal] = useState(
+    false
+  );
 
   const handleClick = (keyTitle: string) => {
     setContent(content + keyTitle);
@@ -114,13 +133,13 @@ const Keyboard = () => {
     setShouldShuffle(false);
   };
 
-  // const displayClearConfirmationModal = () => {
-  //   setShowClearConfirmationModal(true);
-  // };
+  const displayClearConfirmationModal = () => {
+    setShowClearConfirmationModal(true);
+  };
 
-  // const hideClearConfirmationModal = () => {
-  //   setShowClearConfirmationModal(false);
-  // };
+  const hideClearConfirmationModal = () => {
+    setShowClearConfirmationModal(false);
+  };
 
   const handleShiftClick = () => {
     if (shift) {
@@ -156,14 +175,15 @@ const Keyboard = () => {
     setContent(updatedContent);
   };
 
-  // const handleClearClick = () => {
-  //   displayClearConfirmationModal();
-  //   setContent("");
-  // };
+  const handleClearClick = () => {
+    displayClearConfirmationModal();
+    // setContent("");
+  };
 
-  // const clearContent = () => {
-  //   setContent("");
-  // };
+  const clearContent = () => {
+    setContent("");
+    hideClearConfirmationModal();
+  };
 
   return (
     <KeyboardContainer>
@@ -260,21 +280,20 @@ const Keyboard = () => {
           capsLock={capsLock}
         />
 
-        {/* <ClearKey
+        <ClearKey
           title="Clear"
           handleClick={handleClearClick}
           shift={shift}
           capsLock={capsLock}
-        /> */}
+        />
       </FunctionalKeysContainer>
 
-      {/* {showClearConfirmationModal && (
-        <div>
-          <div>Do you want to clear all content?</div>
-          <button onClick={clearContent}>Confirm</button>
-          <button onClick={hideClearConfirmationModal}>Cancel</button>
-        </div>
-      )} */}
+      {showClearConfirmationModal && (
+        <ClearConfirmationModal
+          clearContent={clearContent}
+          hideClearConfirmationModal={hideClearConfirmationModal}
+        />
+      )}
     </KeyboardContainer>
   );
 };
