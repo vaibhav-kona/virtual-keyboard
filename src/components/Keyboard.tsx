@@ -1,4 +1,4 @@
-import { ChangeEventHandler, useState } from "react";
+import { ChangeEventHandler, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import shuffle from "../common/shuffle";
 import ClearConfirmationModal from "./ClearConfirmationModal";
@@ -92,6 +92,20 @@ const Keyboard = () => {
     false
   );
 
+  const refToContentInput = useRef(null);
+
+  useEffect(() => {
+    focusTextArea();
+  }, []);
+
+  const focusTextArea = () => {
+    const textAreaEl: any = refToContentInput.current;
+
+    if (textAreaEl instanceof HTMLTextAreaElement) {
+      textAreaEl.focus();
+    }
+  };
+
   const handleClick = (keyTitle: string) => {
     setContent(content + keyTitle);
 
@@ -102,6 +116,12 @@ const Keyboard = () => {
     }
 
     turnShiftOff();
+
+    focusTextArea();
+  };
+
+  const handleSpace = () => {
+    handleClick(" ");
   };
 
   const handleContentChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
@@ -139,6 +159,7 @@ const Keyboard = () => {
 
   const hideClearConfirmationModal = () => {
     setShowClearConfirmationModal(false);
+    focusTextArea();
   };
 
   const handleShiftClick = () => {
@@ -165,24 +186,35 @@ const Keyboard = () => {
     }
   };
 
-  const handleSpace = () => {
-    setContent(content + " ");
-  };
-
   const handleDeleteClick = () => {
     const contentCopy = content;
     const updatedContent = contentCopy.slice(0, contentCopy.length - 1);
     setContent(updatedContent);
+
+    focusTextArea();
   };
 
   const handleClearClick = () => {
     displayClearConfirmationModal();
-    // setContent("");
   };
 
   const clearContent = () => {
     setContent("");
     hideClearConfirmationModal();
+  };
+
+  const renderKeys = (keys: any[]) => {
+    return keys.map((key) => (
+      <Key
+        key={key.title}
+        title={key.title}
+        shiftCharacter={key.shiftedKey}
+        capsLockCharacter={key.upperCaseKey}
+        handleClick={handleClick}
+        shift={shift}
+        capsLock={capsLock}
+      />
+    ));
   };
 
   return (
@@ -191,54 +223,18 @@ const Keyboard = () => {
 
       <TextAreaContainer>
         <StyledTextArea
+          ref={refToContentInput}
           rows={10}
           onChange={handleContentChange}
           value={content}
         />
       </TextAreaContainer>
 
-      <div>
-        {numericKeys.map((key) => (
-          <Key
-            key={key.title}
-            title={key.title}
-            shiftCharacter={key.shiftedKey}
-            capsLockCharacter={key.upperCaseKey}
-            handleClick={handleClick}
-            shift={shift}
-            capsLock={capsLock}
-          />
-        ))}
-      </div>
+      <div>{renderKeys(numericKeys)}</div>
 
       <AlphaSpecialKeysContainer>
-        <div>
-          {alphabetKeys.map((key) => (
-            <Key
-              key={key.title}
-              title={key.title}
-              shiftCharacter={key.shiftedKey}
-              capsLockCharacter={key.upperCaseKey}
-              handleClick={handleClick}
-              shift={shift}
-              capsLock={capsLock}
-            />
-          ))}
-        </div>
-
-        <div>
-          {specialKeys.map((key) => (
-            <Key
-              key={key.title}
-              title={key.title}
-              shiftCharacter={key.shiftedKey}
-              capsLockCharacter={key.upperCaseKey}
-              handleClick={handleClick}
-              shift={shift}
-              capsLock={capsLock}
-            />
-          ))}
-        </div>
+        <div>{renderKeys(alphabetKeys)}</div>
+        <div>{renderKeys(specialKeys)}</div>
       </AlphaSpecialKeysContainer>
 
       <FunctionalKeysContainer>
