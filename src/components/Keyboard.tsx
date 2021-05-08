@@ -72,7 +72,15 @@ const SpaceKey = styled(Key)`
   flex: 0 0 25%;
   @media (max-width: 768px) {
     order: -1;
-    flex: 0 0 100%;
+    flex: 0 0 50%;
+  }
+`;
+
+const EnterKey = styled(Key)`
+  flex: 0 0 25%;
+  @media (max-width: 768px) {
+    order: -1;
+    flex: 0 0 50%;
   }
 `;
 
@@ -124,6 +132,10 @@ const Keyboard = () => {
 
   const handleSpace = () => {
     handleClick(" ");
+  };
+
+  const handleEnter = () => {
+    handleClick("\n");
   };
 
   const handleContentChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
@@ -267,6 +279,13 @@ const Keyboard = () => {
         <SpaceKey
           title="Space"
           handleClick={handleSpace}
+          shift={shift}
+          capsLock={capsLock}
+        />
+
+        <EnterKey
+          title="Enter"
+          handleClick={handleEnter}
           shift={shift}
           capsLock={capsLock}
         />
