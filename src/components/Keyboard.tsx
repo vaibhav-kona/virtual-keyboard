@@ -28,11 +28,12 @@ const AlphaSpecialKeysContainer = styled.div`
 
 const FunctionalKeysContainer = styled.div`
   margin-top: 20px;
+  display: flex;
+  justify-content: center;
 `;
 
 const FunctionalKey = styled(Key)`
   background-color: ${(props) => (props.isActive ? "darkseagreen" : "white")};
-
   &:hover {
     opacity: 0.8;
   }
@@ -40,10 +41,20 @@ const FunctionalKey = styled(Key)`
 
 const DeleteKey = styled(Key)`
   background-color: #ff6961;
-
   &:hover {
     opacity: 0.8;
   }
+`;
+
+// const ClearKey = styled(Key)`
+//   background-color: #ff6961;
+//   &:hover {
+//     opacity: 0.8;
+//   }
+// `;
+
+const SpaceKey = styled(Key)`
+  flex: 0 0 25%;
 `;
 
 const StyledTextArea = styled.textarea`
@@ -58,6 +69,9 @@ const Keyboard = () => {
   const [numericKeys, setNumericKeys] = useState(nKeys);
   const [specialKeys, setSpecialKeys] = useState(sKeys);
   const [shouldShuffle, setShouldShuffle] = useState(true);
+  // const [showClearConfirmationModal, setShowClearConfirmationModal] = useState(
+  //   false
+  // );
 
   const handleClick = (keyTitle: string) => {
     setContent(content + keyTitle);
@@ -100,6 +114,14 @@ const Keyboard = () => {
     setShouldShuffle(false);
   };
 
+  // const displayClearConfirmationModal = () => {
+  //   setShowClearConfirmationModal(true);
+  // };
+
+  // const hideClearConfirmationModal = () => {
+  //   setShowClearConfirmationModal(false);
+  // };
+
   const handleShiftClick = () => {
     if (shift) {
       turnShiftOff();
@@ -124,15 +146,24 @@ const Keyboard = () => {
     }
   };
 
-  // const handleSpace = () => {
-  //   setContent(content + " ");
-  // };
+  const handleSpace = () => {
+    setContent(content + " ");
+  };
 
   const handleDeleteClick = () => {
     const contentCopy = content;
     const updatedContent = contentCopy.slice(0, contentCopy.length - 1);
     setContent(updatedContent);
   };
+
+  // const handleClearClick = () => {
+  //   displayClearConfirmationModal();
+  //   setContent("");
+  // };
+
+  // const clearContent = () => {
+  //   setContent("");
+  // };
 
   return (
     <KeyboardContainer>
@@ -190,7 +221,6 @@ const Keyboard = () => {
         </div>
       </AlphaSpecialKeysContainer>
 
-      {/* Functional keys */}
       <FunctionalKeysContainer>
         <FunctionalKey
           title={shouldShuffle ? "Shuffle On" : "Shuffle Off"}
@@ -216,6 +246,13 @@ const Keyboard = () => {
           capsLock={capsLock}
         />
 
+        <SpaceKey
+          title="Space"
+          handleClick={handleSpace}
+          shift={shift}
+          capsLock={capsLock}
+        />
+
         <DeleteKey
           title="Delete"
           handleClick={handleDeleteClick}
@@ -223,13 +260,21 @@ const Keyboard = () => {
           capsLock={capsLock}
         />
 
-        {/*<Key*/}
-        {/*  title="Space"*/}
-        {/*  handleClick={handleSpace}*/}
-        {/*  shift={shift}*/}
-        {/*  capsLock={capsLock}*/}
-        {/*/>*/}
+        {/* <ClearKey
+          title="Clear"
+          handleClick={handleClearClick}
+          shift={shift}
+          capsLock={capsLock}
+        /> */}
       </FunctionalKeysContainer>
+
+      {/* {showClearConfirmationModal && (
+        <div>
+          <div>Do you want to clear all content?</div>
+          <button onClick={clearContent}>Confirm</button>
+          <button onClick={hideClearConfirmationModal}>Cancel</button>
+        </div>
+      )} */}
     </KeyboardContainer>
   );
 };
