@@ -1,3 +1,17 @@
+To run the app after clone
+
+- npm i && npm run start
+
+Features implemented
+
+- Virtual keyboard with numbers, alphabets, special characters
+- Enter, space, capslock, shift, delete, clear buttons are implemented
+- Cursor is shown to give visual feedback in desktop view
+- Shuffle of keys can be turned on and off
+
+PS: Cursor display is disabled in mobile view to prevent in built keyboard
+from popping up on textarea focus.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
