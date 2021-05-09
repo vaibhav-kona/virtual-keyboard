@@ -15,11 +15,41 @@ const KeyboardContainer = styled.div`
   max-width: 800px;
   margin: auto;
   padding: 20px;
+  background-color: mintcream;
+  border: 2px solid paleturquoise;
+`;
+
+const TitleAndContentContainer = styled.div`
+  @media (max-width: 992px) {
+    position: sticky;
+    top: 0px;
+    background-color: mintcream;
+    h1 {
+      margin-top: 20px;
+    }
+  }
+`;
+
+const Title = styled.h1`
+  margin-top: 0px;
+  margin-bottom: 0px;
 `;
 
 const TextAreaContainer = styled.div`
   margin-top: 20px;
   margin-bottom: 20px;
+
+  @media (max-width: 992px) {
+    position: sticky;
+    top: 20px;
+  }
+`;
+
+const StyledTextArea = styled.textarea`
+  @media (max-width: 992px) {
+    width: 300px;
+    box-shadow: 4px 5px 11px -5px rgba(23, 22, 22, 0.82);
+  }
 `;
 
 const AlphaSpecialKeysContainer = styled.div`
@@ -32,45 +62,52 @@ const FunctionalKeysContainer = styled.div`
   display: flex;
   justify-content: center;
   flex-flow: row wrap;
+
+  @media (max-width: 992px) {
+    flex-flow: column wrap;
+  }
 `;
 
 const FunctionalKey = styled(Key)`
-  background-color: ${(props) => (props.isActive ? "darkseagreen" : "white")};
+  background-color: ${(props) =>
+    props.isActive ? "rgb(143,188,143)" : "white"};
+
   &:hover {
-    opacity: 0.8;
+    background-color: ${(props) =>
+      props.isActive ? "rgb(143,188,143, 0.8)" : "white"};
   }
-  @media (max-width: 768px) {
+  @media (max-width: 992px) {
     flex: 0 0 30%;
   }
 `;
 
 const DeleteKey = styled(Key)`
-  background-color: #e60023;
+  background-color: rgb(230, 0, 35);
   color: white;
   &:hover {
-    opacity: 0.8;
+    background-color: rgb(230, 0, 35, 0.8);
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 992px) {
     flex: 0 0 40%;
   }
 `;
 
 const ClearKey = styled(Key)`
-  background-color: #e60023;
+  background-color: rgb(230, 0, 35);
   color: white;
   &:hover {
-    opacity: 0.8;
+    background-color: rgb(230, 0, 35, 0.8);
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 992px) {
     flex: 0 0 40%;
   }
 `;
 
 const SpaceKey = styled(Key)`
   flex: 0 0 25%;
-  @media (max-width: 768px) {
+  @media (max-width: 992px) {
     order: -1;
     flex: 0 0 50%;
   }
@@ -78,14 +115,43 @@ const SpaceKey = styled(Key)`
 
 const EnterKey = styled(Key)`
   flex: 0 0 25%;
-  @media (max-width: 768px) {
+  @media (max-width: 992px) {
     order: -1;
     flex: 0 0 50%;
   }
 `;
 
-const StyledTextArea = styled.textarea`
-  width: 300px;
+const DeleteClearKeysContainer = styled.div`
+  @media (max-width: 992px) {
+    display: flex;
+    justify-content: center;
+
+    button {
+      flex: 0 0 45%;
+    }
+  }
+`;
+
+const SpaceEnterKeysContainer = styled.div`
+  @media (max-width: 992px) {
+    display: flex;
+    justify-content: center;
+
+    button {
+      flex: 0 0 45%;
+    }
+  }
+`;
+
+const ShuffleShiftCapsLockKeysContainer = styled.div`
+  @media (max-width: 992px) {
+    order: 1;
+
+    button {
+      padding: 10px;
+      font-size: 14px;
+    }
+  }
 `;
 
 const Keyboard = () => {
@@ -233,16 +299,18 @@ const Keyboard = () => {
 
   return (
     <KeyboardContainer>
-      <h1>Virtual Keyboard with auto shuffle</h1>
+      <TitleAndContentContainer>
+        <Title>Virtual Keyboard</Title>
 
-      <TextAreaContainer>
-        <StyledTextArea
-          ref={refToContentInput}
-          rows={10}
-          onChange={handleContentChange}
-          value={content}
-        />
-      </TextAreaContainer>
+        <TextAreaContainer>
+          <StyledTextArea
+            ref={refToContentInput}
+            rows={10}
+            onChange={handleContentChange}
+            value={content}
+          />
+        </TextAreaContainer>
+      </TitleAndContentContainer>
 
       <div>{renderKeys(numericKeys)}</div>
 
@@ -252,57 +320,63 @@ const Keyboard = () => {
       </AlphaSpecialKeysContainer>
 
       <FunctionalKeysContainer>
-        <FunctionalKey
-          title={shouldShuffle ? "Shuffle On" : "Shuffle Off"}
-          isActive={shouldShuffle}
-          handleClick={handleShuffleClick}
-          shift={shift}
-          capsLock={capsLock}
-        />
+        <ShuffleShiftCapsLockKeysContainer>
+          <FunctionalKey
+            title={shouldShuffle ? "Shuffle On" : "Shuffle Off"}
+            isActive={shouldShuffle}
+            handleClick={handleShuffleClick}
+            shift={shift}
+            capsLock={capsLock}
+          />
 
-        <FunctionalKey
-          title={shift ? "Shift On" : "Shift off"}
-          isActive={shift}
-          handleClick={handleShiftClick}
-          shift={shift}
-          capsLock={capsLock}
-        />
+          <FunctionalKey
+            title={shift ? "Shift On" : "Shift off"}
+            isActive={shift}
+            handleClick={handleShiftClick}
+            shift={shift}
+            capsLock={capsLock}
+          />
 
-        <FunctionalKey
-          title={capsLock ? "Caps Lock On" : "Caps Lock Off"}
-          isActive={capsLock}
-          handleClick={handleCapsLockClick}
-          shift={shift}
-          capsLock={capsLock}
-        />
+          <FunctionalKey
+            title={capsLock ? "Caps Lock On" : "Caps Lock Off"}
+            isActive={capsLock}
+            handleClick={handleCapsLockClick}
+            shift={shift}
+            capsLock={capsLock}
+          />
+        </ShuffleShiftCapsLockKeysContainer>
 
-        <SpaceKey
-          title="Space"
-          handleClick={handleSpace}
-          shift={shift}
-          capsLock={capsLock}
-        />
+        <SpaceEnterKeysContainer>
+          <SpaceKey
+            title="Space"
+            handleClick={handleSpace}
+            shift={shift}
+            capsLock={capsLock}
+          />
 
-        <EnterKey
-          title="Enter"
-          handleClick={handleEnter}
-          shift={shift}
-          capsLock={capsLock}
-        />
+          <EnterKey
+            title="Enter"
+            handleClick={handleEnter}
+            shift={shift}
+            capsLock={capsLock}
+          />
+        </SpaceEnterKeysContainer>
 
-        <DeleteKey
-          title="Delete"
-          handleClick={handleDeleteClick}
-          shift={shift}
-          capsLock={capsLock}
-        />
+        <DeleteClearKeysContainer>
+          <DeleteKey
+            title="Delete"
+            handleClick={handleDeleteClick}
+            shift={shift}
+            capsLock={capsLock}
+          />
 
-        <ClearKey
-          title="Clear"
-          handleClick={handleClearClick}
-          shift={shift}
-          capsLock={capsLock}
-        />
+          <ClearKey
+            title="Clear"
+            handleClick={handleClearClick}
+            shift={shift}
+            capsLock={capsLock}
+          />
+        </DeleteClearKeysContainer>
       </FunctionalKeysContainer>
 
       {showClearConfirmationModal && (

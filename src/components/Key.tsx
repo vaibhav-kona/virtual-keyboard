@@ -18,13 +18,14 @@ const StyledButton = styled.button`
   padding: 12px;
   border-radius: 6px;
   min-width: 64px;
-  font-size: 16px;
+  font-size: 18px;
   margin: 4px;
+  font-weight: 600;
 
   &:hover {
     border: 1px solid darkblue;
-    opacity: 0.5;
     cursor: pointer;
+    background-color: rgba(173, 216, 230, 0.5);
   }
 `;
 
